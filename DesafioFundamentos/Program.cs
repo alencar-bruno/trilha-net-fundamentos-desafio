@@ -1,5 +1,8 @@
-﻿using DesafioFundamentos.Models;
+﻿using DesafioFundamentos.BootClasses;
+using DesafioFundamentos.Models;
 
 ParkingLotByButa oldEstacionamento = new ParkingLotByButa();
+ParkingLotByAlencar newEstacionamento = new ParkingLotByAlencar();
 
-oldEstacionamento.Run();
+// oldEstacionamento.Run();
+newEstacionamento.Run();
