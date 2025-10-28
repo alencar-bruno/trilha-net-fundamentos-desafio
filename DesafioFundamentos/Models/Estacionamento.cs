@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace DesafioFundamentos.Models
 {
     public class Estacionamento
@@ -16,7 +18,19 @@ namespace DesafioFundamentos.Models
         {
             // TODO: Pedir para o usuário digitar uma placa (ReadLine) e adicionar na lista "veiculos"
             // *IMPLEMENTE AQUI*
-            Console.WriteLine("Digite a placa do veículo para estacionar:");
+            string placa = string.Empty;
+
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Digite a placa do veículo para estacionar:");
+                string entrada = Console.ReadLine();
+
+                placa = ValidarPlaca(entrada) ? entrada : string.Empty;
+
+            } while (!ValidarPlaca(placa));
+
+            veiculos.Add(placa);
         }
 
         public void RemoverVeiculo()
@@ -62,6 +76,14 @@ namespace DesafioFundamentos.Models
             {
                 Console.WriteLine("Não há veículos estacionados.");
             }
+        }
+
+        private bool ValidarPlaca(string placa)
+        {
+            // Regex = "Regular Expression"
+            Regex formato = new Regex("^([A-Z]{3}-)+(\\d{1}[A-Z]{1}\\d{2})$");
+
+            return formato.IsMatch(placa);
         }
     }
 }
