@@ -79,15 +79,15 @@ namespace DesafioFundamentos.BootClasses
                 switch (Console.ReadLine())
                 {
                     case "1":
-                        parkingLot.AdicionarVeiculo();
+                        parkingLot.AdicionarVeiculo(inEnglish: true);
                         break;
 
                     case "2":
-                        parkingLot.RemoverVeiculo();
+                        parkingLot.RemoverVeiculo(inEnglish: true);
                         break;
 
                     case "3":
-                        parkingLot.ListarVeiculos();
+                        parkingLot.ListarVeiculos(inEnglish: true);
                         break;
 
                     case "4":

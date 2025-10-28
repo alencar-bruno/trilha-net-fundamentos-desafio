@@ -14,14 +14,14 @@ namespace DesafioFundamentos.Models
             this.precoPorHora = precoPorHora;
         }
 
-        public void AdicionarVeiculo()
+        public void AdicionarVeiculo(bool inEnglish=false)
         {
             string placa = string.Empty;
 
             do
             {
                 Console.Clear();
-                Console.WriteLine("Digite a placa do veículo para estacionar:");
+                Console.WriteLine(inEnglish ? "Enter the parking-intended vehicle's plate:" : "Digite a placa do veículo para estacionar:");
                 string entrada = Console.ReadLine();
 
                 placa = ValidarPlaca(entrada) ? entrada : string.Empty;
@@ -31,9 +31,9 @@ namespace DesafioFundamentos.Models
             veiculos.Add(placa);
         }
 
-        public void RemoverVeiculo()
+        public void RemoverVeiculo(bool inEnglish=false)
         {
-            Console.WriteLine("Digite a placa do veículo para remover:");
+            Console.WriteLine(inEnglish ? "Enter the removing-intended vehicle's plate:" : "Digite a placa do veículo para remover:");
 
             string placa = string.Empty;
             placa = Console.ReadLine();
@@ -41,7 +41,7 @@ namespace DesafioFundamentos.Models
             // Verifica se o veículo existe
             if (veiculos.Any(x => x.ToUpper() == placa.ToUpper()))
             {
-                Console.WriteLine("Digite a quantidade de horas que o veículo permaneceu estacionado:");
+                Console.WriteLine(inEnglish ? "Enter how long the vehicle's been parked:" : "Digite a quantidade de horas que o veículo permaneceu estacionado:");
 
                 int horas = 0;
                 decimal valorTotal = 0;
@@ -51,20 +51,20 @@ namespace DesafioFundamentos.Models
 
                 veiculos.Remove(placa);
 
-                Console.WriteLine($"O veículo {placa} foi removido e o preço total foi de: R$ {valorTotal}");
+                Console.WriteLine(inEnglish ? $"Vehicle <{placa}> removed; final tax is <{valorTotal}>" : $"O veículo {placa} foi removido e o preço total foi de: R$ {valorTotal}");
             }
             else
             {
-                Console.WriteLine("Desculpe, esse veículo não está estacionado aqui. Confira se digitou a placa corretamente");
+                Console.WriteLine(inEnglish ? "Beg your pardon, there's no such vehicle parked here. Check the plate number again." : "Desculpe, esse veículo não está estacionado aqui. Confira se digitou a placa corretamente");
             }
         }
 
-        public void ListarVeiculos()
+        public void ListarVeiculos(bool inEnglish=false)
         {
             // Verifica se há veículos no estacionamento
             if (veiculos.Any())
             {
-                Console.WriteLine("Os veículos estacionados são:");
+                Console.WriteLine(inEnglish ? "Those are all the vehicles parked:" : "Os veículos estacionados são:");
                 foreach (string item in veiculos)
                 {
                     Console.WriteLine($"*\t[{item}]");
@@ -72,7 +72,7 @@ namespace DesafioFundamentos.Models
             }
             else
             {
-                Console.WriteLine("Não há veículos estacionados.");
+                Console.WriteLine(inEnglish ? "There's no vehicle parked here" : "Não há veículos estacionados.");
             }
         }
 
