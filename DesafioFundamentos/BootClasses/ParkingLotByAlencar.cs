@@ -8,6 +8,7 @@ namespace DesafioFundamentos.BootClasses
     {
         private decimal fixedTax = 0.00M;
         private decimal perHourTax = 0.00M;
+        private Estacionamento parkingLot;
 
         public override void Run()
         {
@@ -21,6 +22,8 @@ namespace DesafioFundamentos.BootClasses
                 ParkingLotSpecs specs = JsonConvert.DeserializeObject<ParkingLotSpecs>(content);
                 fixedTax = specs.FixedTax;
                 perHourTax = specs.PerHourTax;
+
+                parkingLot = new Estacionamento(precoInicial: fixedTax, precoPorHora: perHourTax);
             }
             else
             {
@@ -28,8 +31,7 @@ namespace DesafioFundamentos.BootClasses
                 System.Environment.Exit(-1);
             }
 
-            DisplayBanner();
-            Console.WriteLine();
+            DisplayMenu();
         }
 
         private void DisplayBanner(string culture="pt-BR")
@@ -42,6 +44,7 @@ namespace DesafioFundamentos.BootClasses
 
                     FIXED TAX: [{fixedTax:C}]                                TAX PER HOUR: [{perHourTax:C}]
             +--------------------------------------------------------------------------------------------------+
+
             """);
         }
 
@@ -57,5 +60,50 @@ namespace DesafioFundamentos.BootClasses
                 return (false, string.Empty);
             }
         } 
+
+        private void DisplayMenu()
+        {
+            bool menuOn = true;
+
+            // Realiza o loop do menu
+            while (menuOn)
+            {
+                Console.Clear();
+                DisplayBanner();
+                Console.WriteLine("SELECT AN OPTION: ");
+                Console.WriteLine("1 - REGISTER a Vehicle");
+                Console.WriteLine("2 - REMOVE a Vehicle");
+                Console.WriteLine("3 - SHOW ALL Vehicles");
+                Console.WriteLine("4 - EXIT");
+
+                switch (Console.ReadLine())
+                {
+                    case "1":
+                        parkingLot.AdicionarVeiculo();
+                        break;
+
+                    case "2":
+                        parkingLot.RemoverVeiculo();
+                        break;
+
+                    case "3":
+                        parkingLot.ListarVeiculos();
+                        break;
+
+                    case "4":
+                        menuOn = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("NOT AN OPTION");
+                        break;
+                }
+
+                Console.WriteLine("PRESS ANY KEY TO CONTINUE...");
+                Console.ReadLine();
+            }
+
+            Console.WriteLine("END OF PROGRAM");
+        }
     }
 }
