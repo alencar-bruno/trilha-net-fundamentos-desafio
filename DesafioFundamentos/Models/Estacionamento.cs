@@ -66,14 +66,15 @@ namespace DesafioFundamentos.Models
                     // Console.WriteLine(inEnglish ? "Enter how long the vehicle's been parked:" : "Digite a quantidade de horas que o veículo permaneceu estacionado:");
                     // int horas = Convert.ToInt32(Console.ReadLine());
                     Car carroDeSaida = veiculos.Find(car => car.PlateId == placa.ToUpper());
-                    
+
                     carroDeSaida.LeaveParkingLot(carroDeSaida.GetRandomParkingDuration());
-            
-                    decimal valorTotal = CalcularTarifa(duracao: carroDeSaida.InParkingLotTime.Hours);
+
+                    int duracao = carroDeSaida.InParkingLotTime.Hours;
+                    decimal valorTotal = CalcularTarifa(duracao: duracao);
 
                     veiculos.Remove(carroDeSaida);
                     Console.Clear();
-                    ImprimirTicket(valorTarifa: valorTotal, placa: placa, inEnglish: inEnglish);
+                    ImprimirTicket(valorTarifa: valorTotal, placa: placa, duracao: duracao, inEnglish: inEnglish);
                 }
                 else
                 {
@@ -112,7 +113,7 @@ namespace DesafioFundamentos.Models
             return precoInicial + precoPorHora * duracao;
         }
         
-        private void ImprimirTicket(decimal valorTarifa, string placa, string moedaBase="pt-BR", bool inEnglish=false)
+        private void ImprimirTicket(decimal valorTarifa, string placa, int duracao, string moedaBase="pt-BR", bool inEnglish=false)
         {
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(moedaBase);
 
@@ -122,7 +123,11 @@ namespace DesafioFundamentos.Models
 
                                                 [     TICKET      ]
 
-                * VEÍCULO <{placa}> <----------------------------------------------> A PAGAR <{valorTarifa:C}>
+                * VEÍCULO <{placa}>
+                |
+                >   TEMPO EM ESTACIONAMENTO: <{duracao}h>    
+
+                * A PAGAR <{valorTarifa:C}>
 
             +--------------------------------------------------------------------------------------------------+
             """;
@@ -133,7 +138,11 @@ namespace DesafioFundamentos.Models
 
                                                 [     TICKET      ]
 
-                * VEHICLE <{placa}> <------------------------------------------------> BILL <{valorTarifa:C}>
+                * VEHICLE <{placa}>
+                |
+                >   IN-PARKING-LOT DURATION: <{duracao}h>
+
+                * BILL <{valorTarifa:C}>
 
             +--------------------------------------------------------------------------------------------------+
             """;
