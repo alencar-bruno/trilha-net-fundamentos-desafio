@@ -35,14 +35,13 @@ namespace DesafioFundamentos.Models
 
         public void RemoverVeiculo(bool inEnglish=false)
         {
+            Console.Clear();
             if (!ChecarEstacionamento())
             {
-                Console.Clear();
                 Console.WriteLine(inEnglish ? "THERE'S NO VEHICLE PARKED BY NOW." : "NENHUM VEÍCULO ESTACIONADO ATÉ ENTÃO.");
             }
             else
             {
-                Console.Clear();
                 Console.WriteLine(inEnglish ? "Enter the removing-intended vehicle's plate:" : "Digite a placa do veículo para remover:");
 
                 string placa = string.Empty;
@@ -62,7 +61,6 @@ namespace DesafioFundamentos.Models
                 }
                 else
                 {
-                    Console.Clear();
                     Console.WriteLine(inEnglish ? "Beg your pardon, there's no such vehicle parked here. Check the plate number again." : "Desculpe, esse veículo não está estacionado aqui. Confira se digitou a placa corretamente");
                 }
             }
@@ -70,6 +68,7 @@ namespace DesafioFundamentos.Models
 
         public void ListarVeiculos(bool inEnglish=false)
         {
+            Console.Clear();
             // Verifica se há veículos no estacionamento
             if (veiculos.Any())
             {
