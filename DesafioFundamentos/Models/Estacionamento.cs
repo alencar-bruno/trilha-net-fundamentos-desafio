@@ -7,7 +7,6 @@ namespace DesafioFundamentos.Models
     {
         private decimal precoInicial = 0;
         private decimal precoPorHora = 0;
-        // TODO: CHANGE LIST <veiculos> INTO A LIST OF OBJECTS <Car>
         private List<Car> veiculos = new List<Car>();
 
         public Estacionamento(decimal precoInicial, decimal precoPorHora)
@@ -37,8 +36,16 @@ namespace DesafioFundamentos.Models
             Console.Clear();
             if (placa != string.Empty)
             {
-                veiculos.Add(new Car(plateId: placa));
-                Console.WriteLine(inEnglish ? $"VEHICLE <{placa}> GRANTED ACCESS" : $"VEÍCULO <{placa}> LIBERADO");
+                if (!ChecarEstacionamento(placa))
+                {
+                    veiculos.Add(new Car(plateId: placa));
+                    Console.WriteLine(inEnglish ? $"VEHICLE <{placa}> GRANTED ACCESS" : $"VEÍCULO <{placa}> LIBERADO");
+                }
+                else
+                {
+                    Console.WriteLine(inEnglish ? $"VEHICLE <{placa}> ALREADY AT THE PARKING LOT!" : $"VEÍCULO <{placa}> JÁ ESTACIONADO!");
+                }
+
             }
             else
             {
@@ -63,8 +70,6 @@ namespace DesafioFundamentos.Models
                 // Verifica se o veículo existe
                 if (ChecarEstacionamento(placa: placa))
                 {
-                    // Console.WriteLine(inEnglish ? "Enter how long the vehicle's been parked:" : "Digite a quantidade de horas que o veículo permaneceu estacionado:");
-                    // int horas = Convert.ToInt32(Console.ReadLine());
                     Car carroDeSaida = veiculos.Find(car => car.PlateId == placa.ToUpper());
 
                     carroDeSaida.LeaveParkingLot(carroDeSaida.GetRandomParkingDuration());
