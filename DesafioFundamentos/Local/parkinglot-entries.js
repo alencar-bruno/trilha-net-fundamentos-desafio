@@ -1,1 +1,1 @@
-{"FixedValue":5, "PerHourValue":1.2}
+{"FixedValue":5, "PerHourValue":3.2}
