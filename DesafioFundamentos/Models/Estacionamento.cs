@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace DesafioFundamentos.Models
@@ -6,6 +7,7 @@ namespace DesafioFundamentos.Models
     {
         private decimal precoInicial = 0;
         private decimal precoPorHora = 0;
+        // TODO: CHANGE LIST <veiculos> INTO A LIST OF OBJECTS <Car>
         private List<string> veiculos = new List<string>();
 
         public Estacionamento(decimal precoInicial, decimal precoPorHora)
@@ -33,29 +35,36 @@ namespace DesafioFundamentos.Models
 
         public void RemoverVeiculo(bool inEnglish=false)
         {
-            Console.WriteLine(inEnglish ? "Enter the removing-intended vehicle's plate:" : "Digite a placa do veículo para remover:");
-
-            string placa = string.Empty;
-            placa = Console.ReadLine();
-
-            // Verifica se o veículo existe
-            if (veiculos.Any(x => x.ToUpper() == placa.ToUpper()))
+            if (!ChecarEstacionamento())
             {
-                Console.WriteLine(inEnglish ? "Enter how long the vehicle's been parked:" : "Digite a quantidade de horas que o veículo permaneceu estacionado:");
-
-                int horas = 0;
-                decimal valorTotal = 0;
-
-                horas = Convert.ToInt32(Console.ReadLine());
-                valorTotal = precoInicial + precoPorHora * horas;
-
-                veiculos.Remove(placa);
-
-                Console.WriteLine(inEnglish ? $"Vehicle <{placa}> removed; final tax is <{valorTotal}>" : $"O veículo {placa} foi removido e o preço total foi de: R$ {valorTotal}");
+                Console.Clear();
+                Console.WriteLine(inEnglish ? "THERE'S NO VEHICLE PARKED BY NOW." : "NENHUM VEÍCULO ESTACIONADO ATÉ ENTÃO.");
             }
             else
             {
-                Console.WriteLine(inEnglish ? "Beg your pardon, there's no such vehicle parked here. Check the plate number again." : "Desculpe, esse veículo não está estacionado aqui. Confira se digitou a placa corretamente");
+                Console.Clear();
+                Console.WriteLine(inEnglish ? "Enter the removing-intended vehicle's plate:" : "Digite a placa do veículo para remover:");
+
+                string placa = string.Empty;
+                placa = Console.ReadLine();
+
+                // Verifica se o veículo existe
+                if (ChecarEstacionamento(placa: placa))
+                {
+                    Console.WriteLine(inEnglish ? "Enter how long the vehicle's been parked:" : "Digite a quantidade de horas que o veículo permaneceu estacionado:");
+
+                    int horas = Convert.ToInt32(Console.ReadLine());
+                    decimal valorTotal = CalcularTarifa(duracao: horas);
+
+                    veiculos.Remove(placa);
+                    Console.Clear();
+                    ImprimirTicket(valorTarifa: valorTotal, placa: placa, inEnglish: inEnglish);
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine(inEnglish ? "Beg your pardon, there's no such vehicle parked here. Check the plate number again." : "Desculpe, esse veículo não está estacionado aqui. Confira se digitou a placa corretamente");
+                }
             }
         }
 
@@ -82,6 +91,47 @@ namespace DesafioFundamentos.Models
             Regex formato = new Regex("^([A-Z]{3}-)+(\\d{1}[A-Z]{1}\\d{2})$");
 
             return formato.IsMatch(placa);
+        }
+
+        private bool ChecarEstacionamento(string placa = "")
+        {
+            if (placa == "") return veiculos.Any();
+
+            return veiculos.Any(item => item.ToUpper() == placa.ToUpper());
+        }
+
+        private decimal CalcularTarifa(int duracao)
+        {
+            return precoInicial + precoPorHora * duracao;
+        }
+        
+        private void ImprimirTicket(decimal valorTarifa, string placa, string moedaBase="pt-BR", bool inEnglish=false)
+        {
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(moedaBase);
+
+            string templatePortugues = $"""
+            +--------------------------------------------------------------------------------------------------+
+                                             ALENCAR'S ESTACIONAMENTO
+
+                                                [     TICKET      ]
+
+                * VEÍCULO <{placa}> <----------------------------------------------> A PAGAR <{valorTarifa:C}>
+
+            +--------------------------------------------------------------------------------------------------+
+            """;
+
+            string templateIngles = $"""
+            +--------------------------------------------------------------------------------------------------+
+                                                ALENCAR'S PARKING LOT
+
+                                                [     TICKET      ]
+
+                * VEHICLE <{placa}> <------------------------------------------------> BILL <{valorTarifa:C}>
+
+            +--------------------------------------------------------------------------------------------------+
+            """;
+
+            Console.WriteLine(inEnglish ? templateIngles : templatePortugues);
         }
     }
 }
