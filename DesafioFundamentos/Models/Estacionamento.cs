@@ -19,18 +19,31 @@ namespace DesafioFundamentos.Models
         public void AdicionarVeiculo(bool inEnglish=false)
         {
             string placa = string.Empty;
+            int tentativas = 3;
 
             do
             {
                 Console.Clear();
-                Console.WriteLine(inEnglish ? "Enter the parking-intended vehicle's plate:" : "Digite a placa do veículo para estacionar:");
+                if (placa == string.Empty && tentativas < 3) Console.WriteLine(inEnglish ? "<INVALID CAR PLATE>\n" : "<PLACA DE CARRO INVÁLIDA>\n");
+
+                Console.WriteLine(inEnglish ? $"[{tentativas}] Enter the parking-intended vehicle's plate:" : $"[{tentativas}] Digite a placa do veículo para estacionar:");
                 string entrada = Console.ReadLine();
 
                 placa = ValidarPlaca(entrada) ? entrada : string.Empty;
+                tentativas--;
 
-            } while (!ValidarPlaca(placa));
+            } while (!ValidarPlaca(placa) && tentativas > 0);
 
-            veiculos.Add(placa);
+            Console.Clear();
+            if (placa != string.Empty)
+            {
+                veiculos.Add(placa);
+                Console.WriteLine(inEnglish ? $"VEHICLE <{placa}> GRANTED ACCESS" : $"VEÍCULO <{placa}> LIBERADO");
+            }
+            else
+            {
+                Console.WriteLine(inEnglish ? "LIMIT OF BAD ENTRIES EXCEEDED" : "LIMITE DE ENTRADAS INVÁLIDAS EXCEDIDO");
+            }
         }
 
         public void RemoverVeiculo(bool inEnglish=false)
