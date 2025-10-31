@@ -8,7 +8,7 @@ namespace DesafioFundamentos.Models
         private decimal precoInicial = 0;
         private decimal precoPorHora = 0;
         // TODO: CHANGE LIST <veiculos> INTO A LIST OF OBJECTS <Car>
-        private List<string> veiculos = new List<string>();
+        private List<Car> veiculos = new List<Car>();
 
         public Estacionamento(decimal precoInicial, decimal precoPorHora)
         {
@@ -29,15 +29,15 @@ namespace DesafioFundamentos.Models
                 Console.WriteLine(inEnglish ? $"[{tentativas}] Enter the parking-intended vehicle's plate:" : $"[{tentativas}] Digite a placa do veículo para estacionar:");
                 string entrada = Console.ReadLine();
 
-                placa = ValidarPlaca(entrada) ? entrada : string.Empty;
+                placa = Car.ValidateCarPlate(entrada) ? entrada : string.Empty;
                 tentativas--;
 
-            } while (!ValidarPlaca(placa) && tentativas > 0);
+            } while (!Car.ValidateCarPlate(placa) && tentativas > 0);
 
             Console.Clear();
             if (placa != string.Empty)
             {
-                veiculos.Add(placa);
+                veiculos.Add(new Car(plateId: placa));
                 Console.WriteLine(inEnglish ? $"VEHICLE <{placa}> GRANTED ACCESS" : $"VEÍCULO <{placa}> LIBERADO");
             }
             else
@@ -63,12 +63,15 @@ namespace DesafioFundamentos.Models
                 // Verifica se o veículo existe
                 if (ChecarEstacionamento(placa: placa))
                 {
-                    Console.WriteLine(inEnglish ? "Enter how long the vehicle's been parked:" : "Digite a quantidade de horas que o veículo permaneceu estacionado:");
+                    // Console.WriteLine(inEnglish ? "Enter how long the vehicle's been parked:" : "Digite a quantidade de horas que o veículo permaneceu estacionado:");
+                    // int horas = Convert.ToInt32(Console.ReadLine());
+                    Car carroDeSaida = veiculos.Find(car => car.PlateId == placa.ToUpper());
+                    
+                    carroDeSaida.LeaveParkingLot(carroDeSaida.GetRandomParkingDuration());
+            
+                    decimal valorTotal = CalcularTarifa(duracao: carroDeSaida.InParkingLotTime.Hours);
 
-                    int horas = Convert.ToInt32(Console.ReadLine());
-                    decimal valorTotal = CalcularTarifa(duracao: horas);
-
-                    veiculos.Remove(placa);
+                    veiculos.Remove(carroDeSaida);
                     Console.Clear();
                     ImprimirTicket(valorTarifa: valorTotal, placa: placa, inEnglish: inEnglish);
                 }
@@ -86,9 +89,9 @@ namespace DesafioFundamentos.Models
             if (veiculos.Any())
             {
                 Console.WriteLine(inEnglish ? "Those are all the vehicles parked:" : "Os veículos estacionados são:");
-                foreach (string item in veiculos)
+                foreach (Car item in veiculos)
                 {
-                    Console.WriteLine($"*\t[{item}]");
+                    Console.WriteLine($"*\t[{item.PlateId}]");
                 }
             }
             else
@@ -97,19 +100,11 @@ namespace DesafioFundamentos.Models
             }
         }
 
-        private bool ValidarPlaca(string placa)
-        {
-            // Regex = "Regular Expression"
-            Regex formato = new Regex("^([A-Z]{3}-)+(\\d{1}[A-Z]{1}\\d{2})$");
-
-            return formato.IsMatch(placa);
-        }
-
         private bool ChecarEstacionamento(string placa = "")
         {
             if (placa == "") return veiculos.Any();
 
-            return veiculos.Any(item => item.ToUpper() == placa.ToUpper());
+            return veiculos.Any(item => item.PlateId == placa.ToUpper());
         }
 
         private decimal CalcularTarifa(int duracao)
