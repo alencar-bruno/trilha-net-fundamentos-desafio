@@ -19,6 +19,11 @@ namespace DesafioFundamentos.Models
         public DateTime ArrivalTime { get; set; }
         public DateTime ExitTime { get; set; }
 
+        public TimeSpan InParkingLotTime
+        {
+            get => ExitTime - ArrivalTime;
+        }
+
         private string _plateId;
 
         public Car(string plateId)
